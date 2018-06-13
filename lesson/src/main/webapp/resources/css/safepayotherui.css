@@ -1,0 +1,93 @@
+@CHARSET "UTF-8";
+
+ div { text-align : center; }
+
+ a {   text-decoration:none; style: none;}
+ a:visited { color: #62659d;}
+ a:link { color: #62659d; }
+ a:hover { color: #ff0000; }
+
+ table {  margin:0px auto; border-spacing:0px;}
+
+ table td,th { padding:6px; text-align:left; }
+
+ input[type="button"] { background-Color:#424242; color:white; }
+
+ input[type="button"]:hover { background-Color:red; color:white; }
+ input[type="submit"]:hover { background-Color:red; color:white; }
+
+ input[type="text"],input[type="number"] {   font-size:16px;       }
+
+.btnCssA{ background-Color:#424242; color:white; font:12px; font-weight:bold; width:160px; height:30px; border:none; }
+.btnCssB{ background-Color:#424242; color:white; font:12px; font-weight:bold; width:100px; height:20px; border:none; }
+.btnCssC{ background-Color:#424242; color:red; font:20px; font-weight:bold; width:100px; height:50px; border:none; }
+
+#forBalnksmall { height: 100px; }
+#forBlank { height: 200px;}
+
+#teachercheckdiv  {  height:64px; color: red;}
+#errormessagediv  {  height:20px; color: red;}
+
+#mainCenterDiv { width:100%; height:664px; text-align: center; margin-top: 100px; }
+#applyforSafepayDiv { width:100%; height:664px; text-align: center; margin-top: 100px;}
+#mysafepayChangeDiv { width:100%; height:664px; text-align: center; margin-top: 100px;}
+#managersafepaylistDiv { width:100%;  height:664px; text-align: center;  margin-top: 100px;} 
+#mysafepaylistDiv { width:100%; height:664px; text-align: center; margin-top: 100px;}
+#myRefundDiv { width:100%; height:664px; text-align: center;margin-top: 100px; }
+#safepayinfoDiv { width:100%; height:664px; text-align: center;margin-top: 100px; }
+
+#applyforSafepayDiv table td {border-top: solid 1px #d2d2d2; padding:6px; text-align:left; }
+#mysafepayChangeDiv table td {border-top: solid 1px #d2d2d2; padding:6px; text-align:left; }
+
+.td1 { width: 120px; text-align:center; background-Color:#D8ECF6; }
+.td2 { width: 300px; padding: 10px; }
+.lasttd1 { width: 120px; text-align:center; background-Color:#D8ECF6; border-bottom: solid 1px #d2d2d2; }
+.lasttd2 { width: 300px; padding: 10px; border-bottom: solid 1px #d2d2d2;   }
+
+#managersafepaylistDiv .tdrow1 { width: 140px; text-align : center;}
+#managersafepaylistDiv .tdrow2 { width: 140px; text-align : center;}
+#managersafepaylistDiv .tdrow3 { width: 160px; text-align : center;}
+#managersafepaylistDiv .tdrow4 { width: 110px; text-align : center;}
+#managersafepaylistDiv .tdrow5 { width: 110px; text-align : center;}
+#managersafepaylistDiv .tdrow6 { width: 110px; text-align : center;}
+#managersafepaylistDiv .tdrow7 { width: 80px; text-align : center;}
+#managersafepaylistDiv #blankspan{   background-color:#CCCC;  margin-left:30px; }
+#managersafepaylistDiv #blankspan2 { width:60px; background-color:#CCCC; margin-left:-8px;  }
+#managersafepaylistDiv table th { background-Color:#424242; color: #BDBDBD;}
+#managersafepaylistDiv #tablabel1,#tablabel2{ font-size:16px; padding:5px;    }
+#managersafepaylistDiv #subrefundformanager,#subsafepayformanager { height:470px; margin-left:280px; background-Color:#e4e4e4; }
+#managersafepaylistDiv #tablabeldiv { text-align:left;height: 32px; margin-left:280px;}
+#managersafepaylistDiv #labelchoiceview{ color:red; margin-left:200px;}
+#managersafepaylistDiv #labelchoiceview2 {color:red; margin-left:200px;}
+#managersafepaylistDiv #searchtextbox1 { font-size:12px; margin-left:-124px;}
+#managersafepaylistDiv #searchtextbox2  { font-size:12px;  margin-left:-80px;   }
+#managersafepaylistDiv #searchstandardKind,#searchstandardKind2,#alignKind,#alignKind2 {padding: 2px; }
+#managersafepaylistDiv #divformargin {width: 120px;  height:30px; float:left; margin-left:140px; margin-top:2px; }
+#managersafepaylistDiv #divformargin2{width: 120px;  height:30px; float:left; margin-left:100px; }
+#managersafepaylistDiv #table2 th { background-Color:#424242; color: #BDBDBD; height:40px;}
+#managersafepaylistDiv #notsearchenddate,#divforsearchenddate {float:left;}
+#managersafepaylistDiv #divforsearchenddate { width: 500px; margin-left:-74px; }
+#managersafepaylistDiv #notsearchenddate { margin-left: 50px;width:200px;}
+#managersafepaylistDiv input[type="date"] {  font-size:14px; height:22px; width:136px;  }
+#managersafepaylistDiv #tablabeldiv #btnchange { margin-left: 640px; font-size:14px;}
+#managersafepaylistDiv #tablabeldiv #btnchange:hover { completeYN}
+
+
+
+#mysafepaylistDiv .tdrow1 { width: 100px; text-align : center;}
+#mysafepaylistDiv .tdrow2 { width: 100px; text-align : center;}
+#mysafepaylistDiv .tdrow3 { width: 200px; text-align : center;}
+#mysafepaylistDiv .tdrow4 { width: 200px; text-align : center;}
+#mysafepaylistDiv .tdrow5 { width: 200px; text-align : center;}
+#mysafepaylistDiv .tdrow6 { width: 100px; text-align : center;}
+#mysafepaylistDiv table th { background-Color:#424242; color: #BDBDBD; height:40px;}
+
+#myRefundDiv .tdrow1 { width: 100px; text-align : center; border: solid 1px black;  }
+#myRefundDiv .tdrow2 { width: 100px; text-align : center; border: solid 1px black;  }
+#myRefundDiv .tdrow3 { width: 200px; text-align : center; border: solid 1px black;  }
+#myRefundDiv .tdrow4 { width: 200px; text-align : center; border: solid 1px black; }
+#myRefundDiv .tdrow5 { width: 200px; text-align : center; border: solid 1px black; }
+#myRefundDiv .tdrow6 { width: 140px; text-align : center; border: solid 1px black; }
+#myRefundDiv .approveyn {color: red;}
+#myRefundDiv #refundreason {  width:500px; height: 300px; }
+#myRefundDiv .colortd { background-Color:#D8ECF6; color: #424242;};

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+	
+	 <select id="selectMemberazax" parameterType="member" resultType="member">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				MEMBER
+			WHERE
+				USERID = #{userid}	AND USERPWD = #{userpwd}	
+		]]>
+	</select>
+	<select id="selectMember" parameterType="String" resultType="member">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				MEMBER
+			WHERE
+				USERID = #{userid}	AND USERPWD = #{userpwd}	
+		]]>
+	</select>
+	<select id="managerMember" parameterType="String" resultType="member">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				MEMBER
+			WHERE
+				USERID = #{userid}
+		]]>
+	</select>
+	<select id="insertMember" parameterType="member" resultType="hashmap">
+		<![CDATA[
+			INSERT INTO MEMBER VALUES(#{userid}, #{userpwd}, #{username}, #{userno}, #{phone}, #{postal}, #{address}, #{address_o}, #{email}, #{gender}, #{userco}, #{accountname}, #{accountno}, sysdate)
+		]]>
+	</select>
+	<select id="membermupdate" parameterType="member" resultType="hashmap">
+		<![CDATA[
+			UPDATE MEMBER SET  USERPWD= #{userpwd} , EMAIL= #{email} , PHONE= #{phone} ,POSTAL= #{postal}, ADDRESS= #{address}, ADDRESS_O= #{address_o}
+			WHERE USERID = #{userid}
+		]]>
+	</select>
+	<select id="mdel" parameterType="member" resultType="hashmap">
+		<![CDATA[
+			DELETE MEMBER WHERE USERID = #{userid}
+		]]>
+	</select>
+	<select id="idfindin1" parameterType="member" resultType="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				MEMBER
+			WHERE
+				 USERNAME= #{username} AND PHONE= #{phone}
+		]]>
+	</select>
+	<select id="idfindin2" parameterType="member" resultType="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				MEMBER
+			WHERE
+				 USERNAME= #{username} AND EMAIL= #{email}
+		]]>
+	</select>
+	<select id="pwdfindin1" parameterType="member" resultType="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				MEMBER
+			WHERE
+				 USERID= #{userid} AND USERNAME= #{username} AND PHONE= #{phone}
+		]]>
+	</select>
+	<select id="pwdfindin2" parameterType="member" resultType="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM
+				MEMBER
+			WHERE
+				 USERID= #{userid} AND USERNAME= #{username} AND EMAIL= #{email}
+		]]>
+	</select>
+	<select id="pwding" parameterType="member" resultType="int">
+		<![CDATA[
+			UPDATE MEMBER SET USERPWD= #{userpwd}
+			WHERE USERID = #{userid}
+		]]>
+	</select>
+	<select id="idcheck" parameterType="member" resultType="String">
+		<![CDATA[
+			SELECT 
+				USERID
+			FROM
+				MEMBER
+			WHERE
+				USERID= #{userid}
+		]]>
+	</select>
+	<select id="manager" parameterType="page" resultType="hashmap">
+		<![CDATA[
+	  SELECT *
+      FROM(SELECT ROWNUM RNUM, TB.*
+			FROM(SELECT
+				USERID, USERPWD, USERNAME, USERNO, PHONE, POSTAL, ADDRESS, ADDRESS_O, EMAIL, GENDER, USERCO, ACCOUNTNAME, ACCOUNTNO, ENROLL_DATE
+			FROM
+				MEMBER WHERE USERID LIKE #{hiddensearchtextbox1})TB)
+			WHERE RNUM >=#{pvstartforselect} AND RNUM <= #{pvendforselect}
+		]]>
+	</select>
+	<select id="getmemberTotal" parameterType="hashmap" resultType="String">
+		<![CDATA[
+		 SELECT
+				COUNT(*)
+			FROM
+				MEMBER
+			WHERE USERID LIKE #{seachword}
+		]]>
+	</select>
+	
+	<select id="managername" parameterType="page" resultType="hashmap">
+		<![CDATA[
+	  SELECT *
+      FROM(SELECT ROWNUM RNUM, TB.*
+			FROM(SELECT
+				USERID, USERPWD, USERNAME, USERNO, PHONE, POSTAL, ADDRESS, ADDRESS_O, EMAIL, GENDER, USERCO, ACCOUNTNAME, ACCOUNTNO, ENROLL_DATE
+			FROM
+				MEMBER WHERE USERNAME LIKE #{hiddensearchtextbox1})TB)
+			WHERE RNUM >=#{pvstartforselect} AND RNUM <= #{pvendforselect}
+		]]>
+	</select>
+	<select id="getmemberTotalname" parameterType="hashmap" resultType="String">
+		<![CDATA[
+		 SELECT
+				COUNT(*)
+			FROM
+				MEMBER
+			WHERE USERNAME LIKE #{seachword}
+		]]>
+	</select>
+	
+	<select id="managerphone" parameterType="page" resultType="hashmap">
+		<![CDATA[
+	  SELECT *
+      FROM(SELECT ROWNUM RNUM, TB.*
+			FROM(SELECT
+				USERID, USERPWD, USERNAME, USERNO, PHONE, POSTAL, ADDRESS, ADDRESS_O, EMAIL, GENDER, USERCO, ACCOUNTNAME, ACCOUNTNO, ENROLL_DATE
+			FROM
+				MEMBER WHERE PHONE LIKE #{hiddensearchtextbox1})TB)
+			WHERE RNUM >=#{pvstartforselect} AND RNUM <= #{pvendforselect}
+		]]>
+	</select>
+	<select id="getmemberTotalphone" parameterType="hashmap" resultType="String">
+		<![CDATA[
+		 SELECT
+				COUNT(*)
+			FROM
+				MEMBER
+			WHERE PHONE LIKE #{seachword}
+		]]>
+	</select>
+	
+</mapper>

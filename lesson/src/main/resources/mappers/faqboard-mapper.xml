@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="faqboard">
+
+	   <select id="countforfaqboardlist" parameterType="string" resultType="int">
+		<![CDATA[
+		    
+			   select count(*)
+						FROM FAQ_BOARD
+		]]>
+	</select>
+
+
+ <select id="faqboardlisttAll" parameterType="string" resultType="HashMap">
+ 
+		<![CDATA[
+		SELECT ROWNUM RNUM, TB.*
+			FROM(  SELECT *
+				   FROM FAQ_BOARD
+				   ORDER BY FAQBOARDNO )TB
+				ORDER BY RNUM ASC
+		]]>
+	</select>
+	
+	 <select id="inserFaqboard" parameterType="qboard">
+		<![CDATA[
+			INSERT INTO FAQ_BOARD
+			 (FAQBOARDNO, FAQBOARDTITLE, FAQBOARDWRITER, FAQBOARDCONTENT, READCOUNT)
+			 VALUES (SEQ_FAQ_BOARD.NEXTVAL, #{faqboardtitle}, 'admin', #{faqboardcontent}, 0)
+		]]>
+	</select>
+	
+	  <select id="deleteFaqboard" parameterType="String">
+		<![CDATA[
+			DELETE FROM FAQ_BOARD WHERE FAQBOARDNO = #{ FAQBOARDNO }
+		]]>
+	  </select>
+	
+	
+	 <select id="searchtitle" parameterType="HashMap" resultType="HashMap">
+ 
+		<![CDATA[
+			SELECT *
+			FROM FAQ_BOARD
+			WHERE FAQBOARDTITLE LIKE '%${keyword}%'
+			ORDER BY FAQBOARDNO DESC
+		]]>
+		</select>
+		
+		<select id="countforsearchtitle" parameterType="string" resultType="int">
+ 
+		<![CDATA[
+			SELECT count(*)
+			FROM FAQ_BOARD
+			WHERE FAQBOARDTITLE LIKE #{keyword}
+			ORDER BY FAQBOARDNO DESC
+		]]>
+		
+	  </select>
+	
+</mapper>

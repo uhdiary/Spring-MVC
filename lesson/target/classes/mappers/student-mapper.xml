@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="student">
+	<select id="studentList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+		select * 
+		from(
+  			select rownum rnum, SB_SUBJECT, SB_AREA, SB_ORIGINFILE, SB_RENAMEFILE, sb_no, userid, username, email, address, sb_week_day, sb_classtime, sb_price, sb_statement, SB_INTRODUCE, SB_SORT, SB_LOCATION
+  			from(
+   				select * 
+   				from student_board 
+    			left join member on(userid=sb_userid)
+   				order by sb_no desc)) 
+		where rnum >= #{startRow,jdbcType=INTEGER} and rnum <= #{endRow,jdbcType=INTEGER}
+   		]]>
+	</select>
+	
+	<select id="studentSimpleSearch" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+		select *
+		from(
+			select rownum rnum, SB_SUBJECT, SB_AREA, SB_ORIGINFILE, SB_RENAMEFILE, sb_no, userid, username, email, address, sb_week_day, sb_classtime, sb_price, sb_statement, SB_INTRODUCE, SB_SORT, SB_LOCATION
+			from(
+				select *
+				from student_board
+				left join member on(userid=sb_userid)
+				where SB_AREA=#{SB_AREA} and
+					  SB_SUBJECT=#{SB_SUBJECT}
+				order by sb_no desc))
+		where rnum >= #{startRow,jdbcType=INTEGER} and rnum <= #{endRow,jdbcType=INTEGER}
+		]]>
+	</select>
+	
+	<select id="studentDetailSearch" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+		select *
+		from(
+			select rownum rnum, SB_SUBJECT, SB_AREA, SB_ORIGINFILE, SB_RENAMEFILE, sb_no, userid, username, email, address, sb_week_day, sb_classtime, sb_price, sb_statement, SB_INTRODUCE, SB_SORT, SB_LOCATION
+			from(
+				select *
+				from student_board
+				left join member on(userid=sb_userid)
+				where SB_AREA=#{SB_AREA} and
+					  SB_SUBJECT=#{SB_SUBJECT} and
+					  SB_PERPOSE=#{SB_PERPOSE} and
+					  SB_LEVEL=#{SB_LEVEL} and
+					  SB_STYLE=#{SB_STYLE} and
+					  SB_PRICE=#{SB_PRICE}	
+				order by sb_no desc))
+		where rnum >= #{startRow,jdbcType=INTEGER} and rnum <= #{endRow,jdbcType=INTEGER}
+		]]>
+	</select>
+
+	<select id="listCount" resultType="int">
+		select count(*)
+		from student_board
+	</select>
+	
+	<select id="studentListSimpleCount" parameterType="student" resultType="int">
+		select count(*)
+		from student_board
+		where SB_AREA=#{SB_AREA,jdbcType=VARCHAR} and
+			  SB_SUBJECT=#{SB_SUBJECT,jdbcType=VARCHAR}	
+	</select>
+	
+	<select id="studentListDetailCount" parameterType="student" resultType="int">
+		select count(*)
+		from student_board
+		where SB_AREA=#{SB_AREA,jdbcType=VARCHAR} and
+			  SB_SUBJECT=#{SB_SUBJECT,jdbcType=VARCHAR} and
+			  SB_PERPOSE=#{SB_PERPOSE,jdbcType=VARCHAR} and
+			  SB_LEVEL=#{SB_LEVEL,jdbcType=VARCHAR} and
+			  SB_STYLE=#{SB_STYLE,jdbcType=VARCHAR} and
+			  SB_PRICE=#{SB_PRICE,jdbcType=INTEGER}
+	</select>
+	
+	<select id="studentDetail" parameterType="int" resultType="student">
+		<![CDATA[
+			select *
+			from student_board
+			where sb_no = #{sb_no}
+		]]>
+	</select>
+	
+	<select id ="studentSelect" parameterType="string" resultType="student">
+		<![CDATA[
+			select *
+			from  student_board
+			left join member on(userid=sb_userid)
+			where userid = #{userid}
+		]]>
+	</select>
+	
+	<select id="studentInfo" parameterType="string" resultType="member">
+		select *
+		from member
+		where userid = #{userid}
+	</select>
+	
+	<insert id="studentInsert" parameterType="student">
+		insert into student_board(SB_NO, SB_USERID, SB_AREA, SB_ORIGINFILE, SB_RENAMEFILE, SB_CLASSTIME, SB_NUM_TIMES, SB_WEEK_DAY, SB_PERIOD, 
+			SB_STYLE, SB_SUBJECT, SB_PRICE, SB_PERPOSE, SB_LEVEL, SB_INTRODUCE, SB_SORT, SB_LOCATION)
+		values(SEQ_STUDENT.NEXTVAL, #{SB_USERID}, #{SB_AREA}, #{SB_ORIGINFILE, jdbcType=VARCHAR},#{SB_RENAMEFILE, jdbcType=VARCHAR}, #{SB_CLASSTIME},#{SB_NUM_TIMES},#{SB_WEEK_DAY},#{SB_PERIOD},
+			#{SB_STYLE},#{SB_SUBJECT},#{SB_PRICE},#{SB_PERPOSE},#{SB_LEVEL}, #{SB_INTRODUCE, jdbcType=VARCHAR}, #{SB_SORT}, #{SB_LOCATION})
+	</insert>
+	
+	<delete id="studentDelete" parameterType="int">
+		delete from student_board
+		where SB_NO = #{sbno}
+	</delete>
+		
+	<delete id="studentDelelteUserid" parameterType="string">
+		delete from student_board
+		where SB_USERID = #{userid}
+	</delete>
+	
+	<update id="studentUpdate" parameterType="student">
+		update student_board
+		set SB_AREA=#{SB_AREA}, SB_CLASSTIME=#{SB_CLASSTIME}, SB_NUM_TIMES=#{SB_NUM_TIMES}, SB_WEEK_DAY=#{SB_WEEK_DAY}, 
+		SB_PERIOD=#{SB_PERIOD}, SB_STYLE=#{SB_STYLE}, SB_SUBJECT=#{SB_SUBJECT}, SB_PERPOSE=#{SB_PERPOSE}, SB_LEVEL=#{SB_LEVEL},
+		SB_PRICE=#{SB_PRICE}, SB_ORIGINFILE=#{SB_ORIGINFILE, jdbcType=VARCHAR}, SB_RENAMEFILE=#{SB_RENAMEFILE, jdbcType=VARCHAR}, SB_INTRODUCE=#{SB_INTRODUCE, jdbcType=VARCHAR},SB_SORT=#{SB_SORT},SB_LOCATION=#{SB_LOCATION}
+		where SB_USERID=#{SB_USERID}
+	</update>
+</mapper>

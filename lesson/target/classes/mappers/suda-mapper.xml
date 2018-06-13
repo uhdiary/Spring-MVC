@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="suda">		
+<select id="tealist" parameterType="HashMap" resultType="HashMap">
+<![CDATA[
+SELECT *
+FROM gawe_suda
+WHERE table_sort = '1'
+ORDER BY table_no DESC
+]]>
+</select>
+<select id="stlist" parameterType="HashMap" resultType="HashMap">
+<![CDATA[
+SELECT *
+FROM gawe_suda
+WHERE table_sort = '2'
+ORDER BY table_no DESC
+]]>
+</select>
+<select id="alllist" parameterType="HashMap" resultType="HashMap">
+<![CDATA[
+SELECT *
+FROM gawe_suda
+WHERE table_sort = '3'
+ORDER BY table_no DESC
+]]>
+</select>
+<select id="selectBoardDetail" parameterType="int" resultType="Suda">
+<![CDATA[
+SELECT *
+FROM gawe_suda
+WHERE TABLE_NO = #{tno}
+]]>
+</select>
+<insert id="insertBoard" parameterType="Hashmap">
+<![CDATA[
+INSERT INTO GAWE_SUDA VALUES(
+SUDA_SEQ.NEXTVAL, #{table_sort}, #{userid}, #{title}, #{story}, sysdate, 0)
+]]>
+</insert>
+<update id="update" parameterType="Hashmap">
+<![CDATA[
+UPDATE gawe_suda 
+SET	title = #{title}, story = #{story}
+WHERE table_no = #{table_no}	
+]]>
+</update>
+<update id="updatecnt" parameterType="int">
+<![CDATA[
+UPDATE gawe_suda 
+SET	suda_readcount = NVL(suda_readcount, 0) + 1
+WHERE table_no = #{table_no}	
+]]>
+</update>
+<select id = "searchtitle" resultType = "HashMap" parameterType="Hashmap">
+<![CDATA[
+select *
+from gawe_suda
+where title like '%${keyword}%' and table_sort = #{table_sort}
+order by table_no desc
+]]>
+</select>
+<select id="comment" parameterType="int" resultType="HashMap">
+<![CDATA[
+select *
+from suda_comment
+where table_no = #{tno}
+]]>
+</select>
+<delete id = "delete" parameterType = "int">
+delete gawe_suda where table_no = #{table_no}
+</delete>
+<delete id = "deletecomment" parameterType = "int">
+delete suda_comment where comment_no = #{comment_no}
+</delete>
+<select id="nolist" parameterType="int" resultType="HashMap">
+<![CDATA[
+select table_no
+from gawe_suda
+where table_sort = #{table_sort}
+]]>
+</select>
+<select id="comment_count" parameterType="int" resultType="int">
+<![CDATA[
+select count(*)
+from suda_comment
+where table_no = #{table_no}
+]]>
+</select>
+<select id="nolistsearch" parameterType="HashMap" resultType="HashMap">
+<![CDATA[
+select table_no
+from gawe_suda
+where table_sort = #{table_sort} and title like '%${keyword}%'
+]]>
+</select>
+<insert id = "entercomment" parameterType="HashMap">
+<![CDATA[
+insert into suda_comment values(
+SUDA_COMMENT_SEQ.NEXTVAL, #{table_no}, #{userid}, #{comment}, sysdate)
+]]>
+</insert>
+</mapper>

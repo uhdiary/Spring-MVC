@@ -1,0 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html >
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<div id="bottomarea">
+   <br/><label>하단 고정 부분 영역입니다. </label><br/>
+   <label> 연봉, 복지, 꿈의 직장     드림팩토리 </label>
+</div>   

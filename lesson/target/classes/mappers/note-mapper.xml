@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Note">
+
+	<select id="receivelist" parameterType="hashmap" resultType="hashmap">
+		 <![CDATA[  select *
+    from(select rownum rnum, tb.* 
+		from(select *
+		from tb_note
+		join member on(sendid = userid)
+		where receiveid =
+		#{userid} and receivedel = 'N'
+		order by note_idx desc )tb )
+    where rnum<= #{endRow} and rnum>= #{startRow}
+    ]]>
+	</select>
+
+	<select id="receivelistcount" parameterType="String" resultType="int">
+		select count(*) from tb_note
+		join member on(sendid = userid)
+		where
+		receiveid = #{userid} and viewyn = 'N'
+	</select>
+
+	<insert id="sendnote" parameterType="note">
+		INSERT
+		INTO TB_NOTE(note_idx,
+		notect, senddt, sendid, receiveid, senddel, receivedel, viewyn, note_original_filename, note_rename_filename)
+		VALUES(
+		seq_note.nextval, #{notect}, default, #{sendid}, #{receiveid},
+		default, default, default, #{note_original_filename,jdbcType=VARCHAR}, #{note_rename_filename, jdbcType=VARCHAR} )
+	</insert>
+
+	<select id="receivesearchid" parameterType="note" resultType="hashmap">
+		select * from tb_note where #{loginid} = RECEIVEID
+		and sendid like
+		#{search}
+	</select>
+
+	<select id="receivesearchname" parameterType="note" resultType="note">
+		select * from tb_note where #{loginid}=USERNAME
+	</select>
+
+	<select id="receivesearchcont" parameterType="note" resultType="hashmap">
+		select * from tb_note where #{loginid}=RECEIVEID
+		and notect like
+		#{search}
+	</select>
+                
+	<select id="receivesearchlistcount" parameterType="notelist" resultType="int">
+		select count(*)
+		from (select *
+		from tb_note
+		join member on(userid = SENDID)
+		where RECEIVEID = #{loginid} and
+		notect like #{search} and
+		username = #{loginid})
+	</select>
+
+	<select id="sendsearchlistcount" parameterType="notelist" resultType="int">
+		select count(*)
+		from (select *
+		from tb_note
+		join member on(userid = RECEIVEID)
+		where SENDID = #{loginid} and
+		notect like #{search} and
+		username = #{loginid})
+	</select>
+
+	<select id="sendlist" parameterType="hashmap" resultType="hashmap">
+		select
+		*
+		from tb_note
+		join member on(receiveid = userid)
+		where sendid =
+		#{userid} and senddel = 'N'
+		order by note_idx desc
+	</select>
+
+	<select id="sendsearchid" parameterType="note" resultType="hashmap">
+		select * from tb_note where #{loginid} = RECEIVEID
+		and sendid like
+		#{search}
+	</select>
+
+	<select id="sendsearchname" parameterType="note" resultType="note">
+		select * from tb_note where #{loginid}=USERNAME
+	</select>
+
+	<select id="sendsearchcont" parameterType="note" resultType="hashmap">
+		select * from tb_note where #{loginid}=RECEIVEID
+		and notect like
+		#{search}
+	</select>
+
+	<select id="sendlistcount" parameterType="String" resultType="int">
+		select count(*) from tb_note
+		join member on(receiveid = userid)
+		where
+		sendid = #{userid} and viewyn = 'N'
+	</select>
+
+	<select id="noteone" parameterType="int" resultType="note">
+		select *
+		from tb_note
+		join member on(sendid = userid)
+		where note_idx =
+		#{note_idx}
+	</select>
+
+	<update id="noteread" parameterType="int">
+		update tb_note set viewyn =
+		'Y' where note_idx = #{note_idx}
+	</update>
+
+	<update id="receivedel" parameterType="int">
+		update tb_note set
+		receivedel = 'Y' where note_idx = #{note_idx}
+	</update>
+
+	<update id="senddel" parameterType="int">
+		update tb_note set senddel =
+		'Y' where note_idx = #{note_idx}
+	</update>
+
+</mapper>

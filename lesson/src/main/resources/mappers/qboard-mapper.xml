@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="qboard">
+
+      <select id="countforqboardlist" parameterType="string" resultType="int">
+      <![CDATA[
+          
+            select count(*)
+                  FROM Q_BOARD
+                  WHERE QBOARDWRITER = #{userid}
+      ]]>
+   </select>
+   
+   <select id="countforadminqboardlist" parameterType="string" resultType="int">
+      <![CDATA[
+          
+            select count(*)
+                  FROM Q_BOARD
+      ]]>
+   </select>
+   
+   <select id="qboardlist" parameterType="string" resultType="HashMap">
+      <![CDATA[
+          
+         select ROWNUM RNUM, TB.*
+         FROM(       SELECT  *
+                  FROM Q_BOARD
+                  WHERE QBOARDWRITER = #{userid} AND QBOARDREPLYLEV=0
+                  ORDER BY QBOARDDATE  ) TB
+         ORDER BY RNUM DESC
+      ]]>
+   </select>
+   
+      <select id="qboardlistAll" parameterType="string" resultType="HashMap">
+      <![CDATA[
+         SELECT ROWNUM RNUM, TB.*
+         FROM(   SELECT *
+            FROM Q_BOARD WHERE QBOARDREPLYLEV=0
+            ORDER BY QBOARDNO  )TB
+         ORDER BY RNUM DESC
+      ]]>
+   </select>
+   
+   <select id="selectBoardDetail" parameterType="int" resultType="qboard">
+      <![CDATA[
+         SELECT *
+            FROM Q_BOARD
+            WHERE QBOARDNO = #{qboardno}
+      ]]>
+      
+   </select>
+   
+     <select id="inserQboard" parameterType="qboard">
+      <![CDATA[
+         INSERT INTO Q_BOARD
+          (QBOARDNO, QBOARDTITLE, QBOARDWRITER, QBOARDCONTENT, QBOARDDATE)
+          VALUES (SEQ_Q_BOARD.NEXTVAL, #{qboardtitle}, #{qboardwriter}, #{qboardcontent}, SYSDATE)
+      ]]>
+   </select>
+     
+       <select id="deleteQboard" parameterType="String">
+      <![CDATA[
+         DELETE FROM Q_BOARD WHERE QBOARDNO = #{ qboardno  }
+      ]]>
+   </select>
+   
+     <select id="updateQboard" parameterType="hashmap">
+      <![CDATA[
+         UPDATE Q_BOARD SET QBOARDCONTENT= #{qboardcontent}
+            WHERE qboardno = #{qboardno}
+      ]]>
+   </select>
+   
+   <select id="changeansweryn" parameterType="String">
+      <![CDATA[
+         UPDATE Q_BOARD SET ANSWERYN= 'Y'
+            WHERE qboardno = #{qboardno}
+      ]]>
+   </select>
+   
+   
+   
+   
+    <select id="replyinsertqboard" parameterType="hashmap">
+      <![CDATA[
+      INSERT INTO Q_BOARD(QBOARDNO, QBOARDTITLE, QBOARDWRITER, QBOARDCONTENT, QBOARDDATE, READCOUNT, QBOARDREPLYREF,
+QBOARDREPLYLEV, QBOARDREPLYSEQ)
+VALUES (SEQ_Q_BOARD.NEXTVAL,NULL,#{qboardwriter}, #{qboardcontent}, sysdate, 0, #{qboardno},1,1 )
+
+      ]]>
+   </select>
+   
+   <select id="qboardReplylist" parameterType="hashmap" resultType="hashmap">
+      <![CDATA[
+            SELECT QBOARDNO,QBOARDTITLE,QBOARDWRITER,QBOARDCONTENT,QBOARDDATE,READCOUNT,QBOARDREPLYREF,QBOARDREPLYLEV,QBOARDREPLYSEQ
+            FROM Q_BOARD
+            WHERE QBOARDREPLYREF = #{qboardno}
+            ORDER BY QBOARDNO DESC
+      ]]>
+   </select>
+   
+   <select id="qboardReplylist2" parameterType="String" resultType="hashmap">
+      <![CDATA[
+            SELECT QBOARDNO,QBOARDTITLE,QBOARDWRITER,QBOARDCONTENT,QBOARDDATE,READCOUNT,QBOARDREPLYREF,QBOARDREPLYLEV,QBOARDREPLYSEQ
+            FROM Q_BOARD
+            WHERE QBOARDREPLYREF = #{detailboardno}
+            ORDER BY QBOARDNO DESC
+      ]]>
+   </select>
+   
+   
+   <select id="qboardReplylistwithQboardno" parameterType="int" resultType="hashmap">
+      <![CDATA[
+            SELECT QBOARDNO,QBOARDTITLE,QBOARDWRITER,QBOARDCONTENT,QBOARDDATE,READCOUNT,QBOARDREPLYREF,QBOARDREPLYLEV,QBOARDREPLYSEQ
+            FROM Q_BOARD
+            WHERE QBOARDREPLYREF = #{qboardno}
+            ORDER BY QBOARDNO DESC
+      ]]>
+   </select>
+   
+    <select id="replydeleteqboard" parameterType="hashmap">
+      <![CDATA[
+      DELETE Q_BOARD WHERE QBOARDNO = #{qboardno} 
+      ]]>
+   </select>
+   
+</mapper>

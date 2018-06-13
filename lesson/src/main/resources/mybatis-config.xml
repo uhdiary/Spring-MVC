@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+                               "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- Alias 설정 -->
+	<typeAliases>
+<typeAlias alias="member" type="com.tong.lesson.member.vo.MemberVO" />
+		<typeAlias alias="teacher" type="com.tong.lesson.teacher.vo.TeacherVO" />
+		<typeAlias alias="teacherInfo" type="com.tong.lesson.teacher.vo.TeacherInfoVO" />
+		<typeAlias alias="safepay" type="com.tong.lesson.safepay.vo.SafepayVO" />
+		<typeAlias alias="safepayrefund"
+			type="com.tong.lesson.safepay.vo.SafepayRefundVO" />
+		<typeAlias alias="page" type="com.tong.lesson.safepay.vo.PagingVO" />
+		<typeAlias alias="suda" type="com.tong.lesson.suda.vo.Suda" />
+		<typeAlias alias="student" type="com.tong.lesson.student.vo.StudentVO" />
+		<typeAlias alias="note" type="com.tong.lesson.note.vo.NoteVO" />
+		<typeAlias alias="notelist" type="com.tong.lesson.note.vo.NoteListVO" />
+		<typeAlias alias="curri" type="com.tong.lesson.teacher.vo.TeacherCurriVO" />
+		<typeAlias alias="qboard" type="com.tong.lesson.qboard.vo.QboardVO"/>
+		<typeAlias alias="faqboard" type="com.tong.lesson.faqboard.vo.FaqBoardVO"/>
+	</typeAliases>
+
+
+	<!-- Sql Mapper 설정 -->
+	<mappers>
+			<mapper resource="mappers/member-mapper.xml" />
+		<mapper resource="mappers/teacher-mapper.xml" />
+		<mapper resource="mappers/safepay-mapper.xml" />
+		<mapper resource="mappers/suda-mapper.xml" />
+		<mapper resource="mappers/student-mapper.xml" />
+		<mapper resource="mappers/note-mapper.xml"/>
+		<mapper resource="mappers/qboard-mapper.xml"/>
+		<mapper resource="mappers/faqboard-mapper.xml"/>
+	</mappers>
+
+
+
+</configuration>

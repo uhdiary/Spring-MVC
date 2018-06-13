@@ -1,0 +1,777 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="safepay">
+	
+	<select id="getSafepayTotal" parameterType="hashmap" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM SAFEPAY
+		WHERE SPASKUSERID = #{SPASKUSERID} OR SPTEACHERID = #{id} 
+		]]>
+	</select>
+	
+	<select id="necessaryrefundTotal" parameterType="hashmap" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		WHERE SPPROCESSKIND = 'askRefund' AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N'
+		]]>
+	</select>
+	
+	<select id="completerefundTotal" parameterType="hashmap" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		WHERE SPPROCESSKIND = 'afterRefund' 
+		]]>
+	</select>
+	
+	<select id="allofrefundTotal" parameterType="hashmap" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		]]>
+	</select>
+		
+	<select id="necessaryrefundTotalwithreno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		WHERE SPPROCESSKIND = 'askRefund' AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N'
+        AND REFUNDNO LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="necessaryrefundTotalwithsano" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		WHERE SPPROCESSKIND = 'askRefund' AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N'
+        AND SPASKNO LIKE #{hiddensearchtextbox1} 
+		 
+		]]>
+	</select>
+	
+	<select id="necessaryrefundTotalwithid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM(  SELECT SPASKNO
+		       FROM PAYREFUND 
+		       WHERE SPPROCESSKIND = 'askRefund' AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N')A INNER JOIN
+		     ( SELECT SPASKUSERID, SPASKNO
+		       FROM SAFEPAY )B ON A.SPASKNO = B.SPASKNO 
+		WHERE B.SPASKUSERID LIKE #{hiddensearchtextbox1}  
+		]]>
+	</select>
+	
+	<select id="completerefundTotalwithreno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		WHERE SPPROCESSKIND = 'afterRefund' AND REFUNDNO LIKE #{hiddensearchtextbox1}  
+		]]>
+	</select>
+	
+	<select id="completerefundTotalwithsano" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM PAYREFUND 
+		WHERE SPPROCESSKIND = 'afterRefund'  AND SPASKNO LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="completerefundTotalwithid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM(  SELECT SPASKNO
+				   FROM PAYREFUND 
+				   WHERE SPPROCESSKIND = 'afterRefund' )A INNER JOIN
+		      (SELECT SPASKUSERID, SPASKNO
+		       FROM SAFEPAY )B ON A.SPASKNO = B.SPASKNO 
+		WHERE B.SPASKUSERID LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="allofrefundTotalwithreno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		 SELECT count(*)
+		 FROM PAYREFUND WHERE REFUNDNO LIKE #{hiddensearchtextbox1}  
+		]]>
+	</select>
+	
+	<select id="allofrefundTotalwithsano" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		 SELECT count(*)
+		 FROM PAYREFUND WHERE SPASKNO LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="allofrefundTotalwithid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT count(*)
+		FROM(  SELECT SPASKNO
+				   FROM PAYREFUND )A INNER JOIN
+		      (SELECT SPASKUSERID, SPASKNO
+		       FROM SAFEPAY )B ON A.SPASKNO = B.SPASKNO 
+		WHERE B.SPASKUSERID LIKE #{hiddensearchtextbox1}  
+		]]>
+	</select>
+	
+	
+	<select id="necessarydeposittotal"  resultType="java.lang.String">
+		<![CDATA[
+		 SELECT COUNT(*) 
+		 FROM SAFEPAY 
+		 WHERE ENDSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+		]]>
+	</select>
+	
+	<select id="managerallofsafepaytotal" resultType="java.lang.String">
+		<![CDATA[
+		SELECT COUNT(*) 
+		FROM SAFEPAY    
+		]]>
+	</select>
+	
+	<select id="canclesafepaytotalformanager"  resultType="java.lang.String">
+		<![CDATA[
+		SELECT COUNT(*) 
+		FROM SAFEPAY 
+		WHERE SPPROCESSKIND = 'cancleAsk'
+		]]>
+	</select>
+	
+	<select id="donesafepaytotalformanager"  resultType="java.lang.String">
+		<![CDATA[
+	 	SELECT COUNT(*) 
+	 	FROM SAFEPAY 
+	 	WHERE SPPROCESSKIND = 'completeDeal'
+		]]>
+	</select>
+	
+	<select id="necessarydeposittotalwithsafepayno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	 	SELECT COUNT(*) 
+	 	FROM SAFEPAY 
+	 	WHERE ENDSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+				AND SPASKNO LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="necessarydeposittotalwithaskid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	 	SELECT COUNT(*) 
+	 	FROM SAFEPAY 
+	 	WHERE ENDSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+				AND SPASKUSERID LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="necessarydeposittotalwithenddate" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	SELECT COUNT(*) 
+	  	FROM SAFEPAY 
+	  	WHERE ENDSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+				AND ENDSTUDYDATE >=#{hiddensearchdatestartinput} AND ENDSTUDYDATE <= #{hiddensearchdateendinput}   	
+		]]>
+	</select>
+	
+	<select id="managerallofsafepaytotalwithsafepayno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	 SELECT COUNT(*) 
+	  	 FROM SAFEPAY 
+	  	 WHERE SPASKNO LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="managerallofsafepaytotalwithaskid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	 SELECT COUNT(*) 
+	  	 FROM SAFEPAY 
+	  	 WHERE SPASKUSERID LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="managerallofsafepaytotalwithenddate" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	 SELECT COUNT(*) 
+	  	 FROM SAFEPAY 
+	  	 WHERE ENDSTUDYDATE >=#{hiddensearchdatestartinput} AND ENDSTUDYDATE <= #{hiddensearchdateendinput}  
+		]]>
+	</select>
+	
+	<select id="canclesafepaytotalformanagerwithsafeno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	SELECT COUNT(*) 
+	  	FROM SAFEPAY 
+	  	WHERE SPPROCESSKIND = 'cancleAsk' AND SPASKNO LIKE #{hiddensearchtextbox1} 
+		]]>
+	</select>
+	
+	<select id="canclesafepaytotalformanagerwithaskid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	 SELECT COUNT(*)
+	  	  FROM SAFEPAY 
+	  	  WHERE SPPROCESSKIND = 'cancleAsk' AND SPASKUSERID LIKE #{hiddensearchtextbox1}
+		]]>
+	</select>
+	
+	<select id="canclesafepaytotalformanagerwithdate" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+	  	 SELECT COUNT(*) 
+	  	 FROM SAFEPAY 
+	  	 WHERE SPPROCESSKIND = 'cancleAsk' AND ENDSTUDYDATE >=#{hiddensearchdatestartinput} AND ENDSTUDYDATE <= #{hiddensearchdateendinput}
+		]]>
+	</select>
+	
+	<select id="donesafepaytotalformanagerwithsafeno" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		SELECT COUNT(*) 
+		FROM SAFEPAY 
+		WHERE SPPROCESSKIND = 'completeDeal' AND SPASKNO LIKE #{hiddensearchtextbox1} 
+	  	]]>
+	</select>
+	
+	<select id="donesafepaytotalformanagerwithaskid" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		 SELECT COUNT(*) 
+		 FROM SAFEPAY 
+		 WHERE SPPROCESSKIND = 'completeDeal' AND SPASKUSERID LIKE #{hiddensearchtextbox1}
+	  	]]>
+	</select>
+	
+	<select id="donesafepaytotalformanagerwithdate" parameterType="page" resultType="java.lang.String">
+		<![CDATA[
+		 SELECT COUNT(*) FROM SAFEPAY WHERE SPPROCESSKIND = 'completeDeal' AND ENDSTUDYDATE >=#{hiddensearchdatestartinput} AND ENDSTUDYDATE <= #{hiddensearchdateendinput}  
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="necessarydeposit" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *   
+		 FROM(  SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND,A.SPASKUSERID, A.SPENROLLDATE,  A.startSTUDYDATE, 
+                      A.endSTUDYDATE ,A.SendMONEYYNTOTEACHER  
+          	FROM( SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE 
+                          ,SendMONEYYNTOTEACHER 
+                  FROM SAFEPAY
+                  WHERE endSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N' 	
+                  ORDER BY SPASKNO )A INNER JOIN (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS )B
+                  ON A.SPPROCESSKIND = B.SPPROCESSKIND
+                   ) TB  
+		 WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+		 ORDER BY SPASKNO DESC
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="managerallofsafepay" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+    	 FROM( SELECT ROWNUM RNUM, A.SPASKNO , B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, A.STARTSTUDYDATE, A.ENDSTUDYDATE, A.SENDMONEYYNTOTEACHER
+         	   FROM( SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE,SendMONEYYNTOTEACHER  
+               		 FROM SAFEPAY ORDER BY SPASKNO DESC  )A INNER JOIN (SELECT SPPROCESSVALUE, SPPROCESSKIND FROM SAFEPAYPROCESS)B
+                   ON A.SPPROCESSKIND = B.SPPROCESSKIND  ) 
+    	 WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	 ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<select id="canclesafepayformanager" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		 SELECT *
+    	 FROM(SELECT ROWNUM RNUM, TB.*
+    		  FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE  ,SendMONEYYNTOTEACHER  
+				   FROM SAFEPAY WHERE SPPROCESSKIND = 'cancleAsk' ORDER BY SPASKNO  ) TB )
+     	 WHERE RNUM >= #{pvstartforselect} AND RNUM <=#{pvendforselect}
+     	 ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="donesafepayformanager" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT * 
+    	  FROM(SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, 
+        A.SPENROLLDATE,  A.startSTUDYDATE, A.endSTUDYDATE ,A.SendMONEYYNTOTEACHER    
+     		   FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER   
+		 			FROM SAFEPAY WHERE SPPROCESSKIND = 'completeDeal' ORDER BY SPASKNO DESC )A INNER JOIN 
+          (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND  )TB
+    	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+     	  ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="necessarydepositwithsafepayno" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		 SELECT *
+    	 FROM(SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, 
+                    A.startSTUDYDATE, A.endSTUDYDATE , A.SendMONEYYNTOTEACHER    
+   			  FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER  
+				   FROM SAFEPAY 
+				   WHERE endSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+						AND SPASKNO LIKE #{hiddensearchtextbox1}
+				   ORDER BY SPASKNO DESC )A INNER JOIN (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND   )
+    	 WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	 ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!--  완료 -->
+	<select id="necessarydepositwithaskid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+    	  FROM(SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE,  
+                    A.startSTUDYDATE, A.endSTUDYDATE ,A.SendMONEYYNTOTEACHER  
+     		   FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER  
+		 			FROM SAFEPAY 
+		 			WHERE endSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+						AND SPASKUSERID LIKE #{hiddensearchtextbox1} ORDER BY SPASKNO DESC  )A INNER JOIN (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND )
+    	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="necessarydepositwithenddate" parameterType="page" resultType="hashmap">
+		<![CDATA[
+	  	  SELECT *
+   		  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE,
+                    A.startSTUDYDATE, A.endSTUDYDATE , A.SendMONEYYNTOTEACHER  
+   				FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER  
+					 FROM SAFEPAY 
+					 WHERE endSTUDYDATE+3<=SYSDATE-3 AND SPPROCESSKIND='afterPay' AND HAVINGYNREFUND='N'
+							AND endSTUDYDATE >= #{hiddensearchdatestartinput} AND endSTUDYDATE <= #{hiddensearchdateendinput} 
+    				 ORDER BY SPASKNO DESC) A INNER JOIN (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS )B ON A.SPPROCESSKIND = B.SPPROCESSKIND )
+    	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="managerallofsafepaywithsafepayno" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+    	  FROM(SELECT ROWNUM RNUM, A.SPASKNO,B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE,  A.startSTUDYDATE, A.endSTUDYDATE ,A.SendMONEYYNTOTEACHER 
+    		   FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER 
+					FROM SAFEPAY WHERE SPASKNO LIKE #{hiddensearchtextbox1} ORDER BY SPASKNO DESC  )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND  ) 
+     	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="managerallofsafepaywithaskid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+    	  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE,  A.startSTUDYDATE, A.endSTUDYDATE , A.SendMONEYYNTOTEACHER   
+    			FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER   
+					 FROM SAFEPAY 
+					 WHERE SPASKUSERID LIKE #{hiddensearchtextbox1}   )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND ORDER BY SPASKNO DESC  )
+    	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC   
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="managerallofsafepaywithenddate" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+    	  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, 
+                      A.startSTUDYDATE, A.endSTUDYDATE , A.SendMONEYYNTOTEACHER  
+    			FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER  
+					 FROM SAFEPAY WHERE endSTUDYDATE >= #{hiddensearchdatestartinput} AND endSTUDYDATE <= #{hiddensearchdateendinput}
+					  ORDER BY SPASKNO DESC 
+    				   )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND     )
+   		  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+		]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="canclesafepayformanagerwithsafeno" parameterType="page" resultType="hashmap">
+		<![CDATA[
+	  	  SELECT *
+     	  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, 
+                          A.startSTUDYDATE, A.endSTUDYDATE, A.SendMONEYYNTOTEACHER  
+     			FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE,SendMONEYYNTOTEACHER  
+					 FROM SAFEPAY WHERE SPPROCESSKIND = 'cancleAsk' AND SPASKNO LIKE #{hiddensearchtextbox1}
+     				 ORDER BY SPASKNO DESC )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND   )
+     	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="canclesafepayformanagerwithaskid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+   		  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE,  A.startSTUDYDATE,
+                      A.endSTUDYDATE , A.SendMONEYYNTOTEACHER 
+   				FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER 
+		 			 FROM SAFEPAY WHERE SPPROCESSKIND = 'cancleAsk' AND SPASKUSERID LIKE #{hiddensearchtextbox1} 
+     				 ORDER BY SPASKNO DESC )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND  )
+    	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="canclesafepayformanagerwithdate" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+   		  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE,  A.startSTUDYDATE, A.endSTUDYDATE ,A.SendMONEYYNTOTEACHER 
+   				FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER 
+		 			 FROM SAFEPAY WHERE SPPROCESSKIND = 'cancleAsk' AND endSTUDYDATE >= #{hiddensearchdatestartinput}
+     						AND endSTUDYDATE <= #{hiddensearchdateendinput}   ORDER BY SPASKNO DESC  )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND )
+     	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+		]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="donesafepayformanagerwithsafeno" parameterType="page" resultType="hashmap">
+		<![CDATA[
+ 	  	  SELECT *
+    	  FROM( SELECT ROWNUM RNUM, A.SPASKNO, B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, 
+                              A.startSTUDYDATE, A.endSTUDYDATE , A.SendMONEYYNTOTEACHER  
+    			FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE,  startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER  
+					 FROM SAFEPAY WHERE SPPROCESSKIND = 'completeDeal' AND SPASKNO LIKE #{hiddensearchtextbox1}
+    				 ORDER BY SPASKNO DESC  )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS )B ON A.SPPROCESSKIND = B.SPPROCESSKIND  )
+     	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	<!-- 완료 -->
+	<select id="donesafepayformanagerwithaskid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+   		  FROM( SELECT ROWNUM RNUM, A.SPASKNO,B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, A.startSTUDYDATE,
+                                  A.endSTUDYDATE, A.SendMONEYYNTOTEACHER  
+   				FROM(SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE, startSTUDYDATE, endSTUDYDATE, SendMONEYYNTOTEACHER  
+					 FROM SAFEPAY WHERE SPPROCESSKIND = 'completeDeal' AND SPASKUSERID LIKE #{hiddensearchtextbox1}
+    				 ORDER BY SPASKNO DESC )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND   )
+     	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+	  	]]>
+	</select>
+	
+	
+	<select id="donesafepayformanagerwithdate" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+    	  FROM(SELECT ROWNUM RNUM, A.SPASKNO,B.SPPROCESSVALUE SPPROCESSKIND, A.SPASKUSERID, A.SPENROLLDATE, A.startSTUDYDATE, 
+                      A.endSTUDYDATE , A.SendMONEYYNTOTEACHER 
+   			   FROM( SELECT SPASKNO, SPPROCESSKIND, SPASKUSERID, SPENROLLDATE, startSTUDYDATE, endSTUDYDATE ,SendMONEYYNTOTEACHER 
+					 FROM SAFEPAY WHERE SPPROCESSKIND = 'completeDeal' AND endSTUDYDATE >= #{hiddensearchdatestartinput}
+    					AND endSTUDYDATE <= #{hiddensearchdateendinput} ORDER BY SPASKNO DESC )A INNER JOIN (SELECT * FROM SAFEPAYPROCESS)B ON A.SPPROCESSKIND = B.SPPROCESSKIND  )
+    	  WHERE RNUM >= #{pvstartforselect} AND RNUM <= #{pvendforselect}
+    	  ORDER BY SPASKNO DESC 
+		]]>
+	</select>
+	
+	
+	
+	
+	
+	<select id="selectmysafepayList" parameterType="page" resultType="hashmap">
+		<![CDATA[
+	    SELECT *
+	 	FROM(SELECT ROWNUM rnum, tb.*
+			FROM(SELECT A.SPASKNO SPASKNO, B.SPPROCESSVALUE SPPROCESSVALUE,A.SPPROCESSKIND SPPROCESSKIND ,  A.SPENROLLDATE SPENROLLDATE, A.SPASKUSERID SPASKUSERID, C.USERNAME SPTEACHERNAME,
+            D.USERNAME SPSTUDENTNAME,
+				        A.STARTSTUDYDATE STARTSTUDYDATE, A.ENDSTUDYDATE ENDSTUDYDATE, A.STUDYPRICE STUDYPRICE
+			     FROM ( SELECT SPASKNO,   SPPROCESSKIND , SPENROLLDATE, SPASKUSERID, SPTEACHERID, STARTSTUDYDATE, ENDSTUDYDATE, STUDYPRICE
+			            FROM SAFEPAY WHERE SPASKUSERID = #{pvid} OR SPTEACHERID = #{pvid} ) A INNER JOIN
+			           (SELECT SPPROCESSVALUE,SPPROCESSKIND  FROM SAFEPAYPROCESS ) B ON A.SPPROCESSKIND = B.SPPROCESSKIND INNER JOIN
+			           (SELECT USERID, USERNAME FROM MEMBER) C ON A.SPTEACHERID = C.USERID INNER JOIN  
+                 (SELECT USERID, USERNAME FROM MEMBER) D ON A.SPASKUSERID = D.USERID ORDER BY SPASKNO DESC) tb
+			WHERE ROWNUM <= #{pvendforselect} )
+		 WHERE rnum >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	<select id="insertsafepay" parameterType="hashmap" >
+		<![CDATA[
+		INSERT INTO SAFEPAY
+		(SPASKNO, SPPROCESSKIND, SPENROLLDATE, SPASKUSERID, SPTEACHERID, STARTSTUDYDATE, ENDSTUDYDATE,STUDYPRICE, STUDYCOUNT,HAVINGYNREFUND)
+		VALUES (SEQ_SAFEPAY.NEXTVAL, 'beforeAsk', TO_DATE(SYSDATE,'yyyy/mm/dd hh24:mi:ss'), #{SPASKUSERID}, #{SPTEACHERID},
+		#{STARTSTUDYDATE}, #{ENDSTUDYDATE}, #{STUDYPRICE}, #{STUDYCOUNT},'N')
+		]]>
+	</select>
+	
+	
+	<!-- 확인완료 -->	
+	<select id="necessaryrefund" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'askRefund' AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N' ORDER BY REFUNDNO DESC ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON A.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} )
+		WHERE RNUM >= #{pvstartforselect}  
+		]]>
+	</select>
+		
+	<select id="completerefund" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		     FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO,(SELECT SPPROCESSVALUE FROM SAFEPAYPROCESS WHERE SPPROCESSKIND = 'afterRefund' ) SPPROCESSVALUE ,
+		   			   A.SPASKUSERID SPASKUSERID,B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		   		   FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		          (SELECT * 
+		           FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund'  ORDER BY REFUNDNO DESC ) B ON A.SPASKNO = B.SPASKNO  ) TB 
+		    	   WHERE ROWNUM <= #{pvendforselect}  )
+		WHERE RNUM >= #{pvstartforselect}  
+		]]>
+	</select>
+	
+	<select id="allofrefund" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund' OR SPPROCESSKIND = 'askRefund' ORDER BY REFUNDNO DESC   ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON B.SPPROCESSKIND = C.SPPROCESSKIND ORDER BY REFUNDNO DESC ) TB 
+	     )
+		WHERE RNUM >= #{pvstartforselect}  AND RNUM <= #{pvendforselect} 
+		]]>
+	</select>
+	
+	           
+	
+	<select id="necessaryrefundwithreno" parameterType="page" resultType="hashmap">
+		<![CDATA[	
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'askRefund'
+		         AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N' ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON A.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND REFUNDNO LIKE #{hiddensearchtextbox1} ORDER BY REFUNDNO DESC )
+		WHERE RNUM >= #{pvstartforselect}  
+		]]>
+	</select>
+	
+	<select id="necessaryrefundwithsano" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		 SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'askRefund' 
+		        AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N' ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON A.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND SPASKNO LIKE #{hiddensearchtextbox1} ORDER BY REFUNDNO DESC)
+		WHERE RNUM >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	<select id="necessaryrefundwithid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		 SELECT *
+		 FROM(   SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+               FROM (SELECT *
+                     FROM SAFEPAY ) A INNER JOIN 
+                    (SELECT * 
+                     FROM PAYREFUND 
+                     WHERE SPPROCESSKIND = 'askRefund' AND TEACHERCONFIRMYN = 'Y' AND RESULTYN = 'N' ) B
+                     ON A.SPASKNO = B.SPASKNO  INNER JOIN
+                    (SELECT SPPROCESSKIND, SPPROCESSVALUE 
+                     FROM SAFEPAYPROCESS ) C ON A.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+              WHERE ROWNUM <=  #{pvendforselect} AND SPASKUSERID LIKE #{hiddensearchtextbox1} ORDER BY REFUNDNO DESC    )
+        WHERE RNUM >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	<select id="completerefundwithreno" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, 
+        (SELECT SPPROCESSVALUE FROM SAFEPAYPROCESS  WHERE SPPROCESSKIND = 'afterRefund') SPPROCESSVALUE 
+        , A.SPASKUSERID SPASKUSERID, B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund'  ORDER BY REFUNDNO DESC ) B ON A.SPASKNO = B.SPASKNO   
+       ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND REFUNDNO LIKE #{hiddensearchtextbox1})
+		WHERE RNUM >= #{pvstartforselect}  
+		]]>
+	</select>
+	
+	<select id="completerefundwithsano" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO,  
+        (SELECT SPPROCESSVALUE FROM SAFEPAYPROCESS  WHERE SPPROCESSKIND = 'afterRefund') SPPROCESSVALUE 
+        , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund'  ORDER BY REFUNDNO DESC ) B ON A.SPASKNO = B.SPASKNO  
+         ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND SPASKNO LIKE #{hiddensearchtextbox1} )
+		WHERE RNUM >= #{pvstartforselect}  
+		]]>
+	</select>
+	
+	<select id="completerefundwithid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		  SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, 
+        (SELECT SPPROCESSVALUE FROM SAFEPAYPROCESS  WHERE SPPROCESSKIND = 'afterRefund') SPPROCESSVALUE  
+        , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund'  ORDER BY REFUNDNO DESC ) B ON A.SPASKNO = B.SPASKNO  
+		         ) TB 
+		    WHERE ROWNUM <= #{pvendforselect}  AND SPASKUSERID LIKE #{hiddensearchtextbox1}    )
+		WHERE RNUM >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	<select id="allofrefundwithreno" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		 SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund' OR SPPROCESSKIND = 'askRefund'
+               ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON B.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND REFUNDNO LIKE #{hiddensearchtextbox1}  ORDER BY REFUNDNO DESC )
+		WHERE RNUM >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	<select id="allofrefundwithsano" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund' OR SPPROCESSKIND = 'askRefund'
+               ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON B.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND SPASKNO LIKE #{hiddensearchtextbox1}  ORDER BY REFUNDNO DESC )
+		WHERE RNUM >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	<select id="allofrefundwithid" parameterType="page" resultType="hashmap">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT ROWNUM RNUM, TB.*
+		    FROM( SELECT B.REFUNDNO REFUNDNO, A.SPASKNO SPASKNO, C.SPPROCESSVALUE SPPROCESSVALUE , A.SPASKUSERID SPASKUSERID,
+		    B.TEACHERCONFIRMYN TEACHERCONFIRMYN, B.RESULTYN RESULTYN
+		    FROM (SELECT * FROM SAFEPAY ) A INNER JOIN 
+		        (SELECT * FROM PAYREFUND WHERE SPPROCESSKIND = 'afterRefund' OR SPPROCESSKIND = 'askRefund'
+               ) B ON A.SPASKNO = B.SPASKNO  INNER JOIN
+		        (SELECT SPPROCESSKIND, SPPROCESSVALUE FROM SAFEPAYPROCESS ) C ON B.SPPROCESSKIND = C.SPPROCESSKIND ) TB 
+		    WHERE ROWNUM <= #{pvendforselect} AND SPASKUSERID LIKE #{hiddensearchtextbox1}  ORDER BY REFUNDNO DESC )
+		WHERE RNUM >= #{pvstartforselect} 
+		]]>
+	</select>
+	
+	
+	
+	
+	
+	<select id="insertrefund" parameterType="hashmap" >
+		<![CDATA[
+		INSERT INTO PAYREFUND
+		(REFUNDNO, SPASKNO, REFUNDENROLLDATE, SPPROCESSKIND, STUDYPRICE, TOTALSTUDYCOUNT, COMPLETESTUDYCOUNT, REFUNDPRICE,
+		REFUNDREASON, TEACHERCONFIRMYN, RESULTYN)
+		VALUES (SEQ_REFUND.NEXTVAL, #{ spaskno }, TO_DATE(SYSDATE,'yyyy/mm/dd hh24:mi:ss'), 'askRefund', #{STUDYPRICE },
+		#{ TOTALSTUDYCOUNT}, #{COMPLETESTUDYCOUNT }, #{REFUNDPRICE }, #{ REFUNDREASON}, 'N', 'N')
+		]]>
+	</select>
+	
+	<select id="refunddelete" parameterType="hashmap" >
+		<![CDATA[
+		DELETE PAYREFUND WHERE REFUNDNO = #{refundno}
+		]]>
+	</select>
+	
+	<select id="approvestatuschange" parameterType="hashmap" >
+		<![CDATA[
+		UPDATE PAYREFUND SET TEACHERCONFIRMYN= #{approveyn}
+		WHERE REFUNDNO = #{refundno} 
+		]]>
+	</select>
+		
+	<select id="getSelectedSafepay"  parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		 SELECT B.SPPROCESSVALUE SPPROCESSVALUE, A.SPASKNO SPASKNO, C.USERNAME SPTEACHERNAME , 
+        A.SPTEACHERID SPTEACHERID, A.SPASKUSERID SPASKUSERID, A.STUDYPRICE STUDYPRICE, A.STUDYCOUNT STUDYCOUNT,
+        A.STARTSTUDYDATE STARTSTUDYDATE, A.ENDSTUDYDATE ENDSTUDYDATE
+		    FROM (SELECT * FROM SAFEPAY WHERE SPASKNO =#{SPASKNO}) A INNER JOIN 
+		        (SELECT * FROM SAFEPAYPROCESS) B ON A.SPPROCESSKIND = B.SPPROCESSKIND INNER JOIN
+            (SELECT USERID, USERNAME FROM MEMBER) C ON A.SPTEACHERID = C.USERID
+		]]>
+	</select>
+	
+	<select id="getSelectedRefund"  parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		   SELECT *
+		   FROM(   SELECT ROWNUM RNUM, A.* 
+				   FROM(SELECT REFUNDNO, SPASKNO, REFUNDENROLLDATE, SPPROCESSKIND, STUDYPRICE, TOTALSTUDYCOUNT,
+				        COMPLETESTUDYCOUNT, REFUNDPRICE, REFUNDREASON, TEACHERCONFIRMYN, RESULTYN
+						FROM PAYREFUND WHERE SPASKNO = #{SPASKNO} ORDER BY REFUNDNO DESC ) A )
+		   WHERE RNUM =1
+		]]>
+	</select>
+	
+	<select id="updateStatus" parameterType="hashmap" >
+		<![CDATA[
+		UPDATE SAFEPAY SET SPPROCESSKIND= #{SPPROCESSKIND}
+		WHERE SPASKNO = #{SPASKNO}
+		]]>
+	</select>
+	
+	<select id="updateHavingynrefund" parameterType="hashmap" >
+		<![CDATA[
+		UPDATE SAFEPAY SET HAVINGYNREFUND= #{HAVINGREFUNDYN}
+		WHERE SPASKNO = #{SPASKNO}
+		]]>
+	</select>
+	
+	<select id="getteachercheck" parameterType="hashmap" resultType="java.lang.String" >
+		<![CDATA[
+		 SELECT COUNT(*)
+		 FROM MEMBER 
+		 WHERE USERNAME = #{teachername } AND USERID= #{spteacherid }
+		]]>
+	</select>	
+	
+	<select id="setafterdeposit" parameterType="hashmap" resultType="java.lang.String" >
+		<![CDATA[
+		 UPDATE PAYREFUND SET RESULTYN = #{ afterresultynarray}, SPPROCESSKIND = #{ afterprocesskindarray }
+		 WHERE  REFUNDNO = #{ refundnoarray }  
+		]]>
+	</select>
+	
+	<select id="setafterdepositsafepay" parameterType="hashmap" resultType="java.lang.String" >
+		<![CDATA[
+		 UPDATE SAFEPAY SET SENDMONEYYNTOTEACHER = #{ afterresultynarray}, SPPROCESSKIND = #{ afterprocesskindarray }
+		 WHERE  SPASKNO = #{ safepaynoarray }  
+		]]>
+	</select>
+</mapper>

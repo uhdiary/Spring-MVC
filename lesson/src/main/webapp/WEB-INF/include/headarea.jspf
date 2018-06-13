@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<title>first</title>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/safepayui.css'/>" />
+<div id="headarea" >
+   <div style="text-align: center;" >
+     <div id="div1" class="group1"><br>
+		<span><a href="home.do" id="mainname">과외 연구소</a></span>
+     </div>
+     <div id="div2" class="group2"><br>
+		<span>	
+			 <c:choose> 
+				 <c:when test="${ sessionScope.loginUser==null}">  
+					 <a href="home.do"  >  로그인/회원가입  </a>	 
+				 </c:when>
+				<c:otherwise>
+					 <a href="logout.do" id="gomysafepay" > 로그아웃  </a>
+				</c:otherwise> 
+		 	 </c:choose>		
+		</span>
+     </div>   
+	 <div id="div3" class="group2"> 
+		<ul><li><a href="#">선생님 <span class="minispan">▼</span></a>
+				<ul class="submenuUl">
+				<li><a  href="#">▶ 선생님 메뉴 1</a></li>
+				<li><a  href="#">▶ 선생님 메뉴 2</a></li>  
+				<li><a  href="#">▶ 선생님 메뉴 3</a></li> 
+				</ul>	
+			</li>
+		</ul>
+	 </div>	
+	 <div id="div4" class="group2"> 
+		<ul><li><a href="#">학생 <span class="minispan">▼</span></a>
+				<ul class="submenuUl">
+				<li><a  href="#">▶ 학생 메뉴 1</a></li> 
+				<li><a  href="#">▶ 학생 메뉴 2</a></li>  
+				<li><a  href="#">▶ 학생 메뉴 3</a></li> 
+				</ul>	
+			</li>
+		</ul>
+	 </div>	
+	 <div id="div5" class="group2"> 
+		<ul><li><a href="#">커리큘럼 <span class="minispan">▼</span></a>
+				<ul class="submenuUl">
+				<li><a  href="#">▶ 커리큘럼 메뉴 1</a></li> 
+				<li><a  href="#">▶ 커리큘럼 메뉴 2</a></li>  
+				<li><a  href="#">▶ 커리큘럼 메뉴 3</a></li> 
+				</ul>	
+			</li>
+		</ul>
+	 </div>	
+	 <div id="div6" class="group2"> 
+		<ul><li><a href="/semi/category?cId=t">수다방 <span class="minispan">▼</span></a>
+				<ul class="submenuUl">
+				<li><a  href="#">▶ 수다방 메뉴 1</a></li> 
+				<li><a  href="#">▶ 수다방 메뉴 2</a></li>  
+				<li><a  href="#">▶ 수다방 메뉴 3</a></li> 
+				</ul>	
+			</li>
+		</ul>
+	 </div>
+     <div id="div7" class="group2"> 
+		<ul><li><a href="#">안전과외 <span class="minispan">▼</span></a>
+				<ul class="submenuUl">
+				<li><a href="safepayinfo.do">▶ 안전결재란?</a></li> 
+				<li><a href="applyforsafepay.do?loginuser=${sessionScope.loginUser.userid}">▶ 안전결재 신청</a></li> 
+				<li><a href="mysafepay.do?spaskuserid=${sessionScope.loginUser.userid}" id="gomysafepay">▶ 나의 안전결재</a></li>  
+				<li><a href="managerSafePayList.do?spaskuserid=admin">▶ 관리자 안전결재</a></li> 
+				</ul>	
+			</li>
+		</ul>
+	 </div>	
+	 <div id="div8" class="group2"> 
+		<ul><li><a href="#">고객센터 <span class="minispan">▼</span></a>
+				<ul class="submenuUl">
+				<li><a  href="#">▶ 고객센터 메뉴1</a></li> 
+				<li><a  href="#">▶ 고객센터 메뉴2</a></li>  
+				<li><a  href="#">▶ 고객센터 메뉴3</a></li> 
+				</ul>	
+			</li>
+		</ul>
+	 </div>	
+ </div> 
+<%@ include file="/WEB-INF/include/addedbody.jspf"%>
+</div>

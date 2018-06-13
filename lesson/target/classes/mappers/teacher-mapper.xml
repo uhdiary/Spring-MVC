@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="teacher">
+
+	<select id="selectTeacher" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+select * from(
+select *
+			from (select rownum rnum, lesson_style, wish_price, tc_count, userid, tinf_title, career, lesson_area,
+subject, originalfilepath, renamefilepath from teacher_inf) order by tc_count desc)
+where rnum >= #{startRow,jdbcType=INTEGER} and rnum <= #{endRow,jdbcType=INTEGER}
+			
+		]]>
+	</select>
+
+
+	<select id="selectOntTeacher" parameterType="teacher"
+		resultType="teacher">
+		<![CDATA[
+		select *
+		from  teacher_inf
+	left join member using(userid)
+  left join curriculum using(userid)
+		where userid = #{userid}
+		]]>
+	</select>
+
+	<select id="teacherEp" parameterType="int" resultType="teacherInfo">
+		<![CDATA[
+		select *
+		from teacher_ep
+		where tinf_no = #{tinf_no}
+		]]>
+	</select>
+	<insert id="teacherInsert" parameterType="teacher">
+	<![CDATA[
+	insert into teacher_inf(
+	tinf_no, userid, subject, tinf_title, self, time_price, wish_price,
+	academic, university, major, university_state, career, lesson_style,
+	lesson_area, call_time, lesson_target,
+	place_check, place, price_check, free_check, originalfilepath,
+	renamefilepath, img_check, possibility_time, tc_count) values(
+	seq_teacher_inf.nextval,
+	#{userid},
+	#{subject, jdbcType=VARCHAR},
+	#{tinf_title, jdbcType=VARCHAR},
+	#{self, jdbcType=VARCHAR},
+	#{time_price, jdbcType=INTEGER},
+	#{wish_price, jdbcType=INTEGER},
+	#{academic, jdbcType=VARCHAR},
+	#{university, jdbcType=VARCHAR},
+	#{major, jdbcType=VARCHAR},
+	#{university_state, jdbcType=VARCHAR},
+	#{career, jdbcType=INTEGER},
+	#{lesson_style, jdbcType=VARCHAR},
+	#{lesson_area, jdbcType=VARCHAR},
+	#{call_time, jdbcType=VARCHAR},
+	#{lesson_target,jdbcType=VARCHAR},
+	#{place_check, jdbcType=VARCHAR},
+	#{place, jdbcType=VARCHAR},
+	#{price_check, jdbcType=VARCHAR},
+	#{free_check, jdbcType=VARCHAR},
+	#{originalfilepath, jdbcType=VARCHAR},
+	#{renamefilepath, jdbcType=VARCHAR},
+	#{img_check, jdbcType=VARCHAR},
+	#{possibility_time, jdbcType=VARCHAR},
+	default
+)
+		]]>
+	</insert>
+
+	<select id="listCount1" resultType="int">
+		select count(*)
+		from
+		teacher_inf
+	</select>
+
+
+	<select id="listSimpleCount" parameterType="teacher" resultType="int">
+		select count(*)
+		from teacher_inf
+		where
+		lesson_area like '%'||#{lesson_area,jdbcType=VARCHAR}||'%' and
+		subject like '%'||#{subject,jdbcType=VARCHAR}||'%'
+	</select>
+
+	<select id="listDetailCount" parameterType="teacher" resultType="int">
+		select count(*)
+		from teacher_inf
+		LEFT JOIN MEMBER USING(USERID)
+		where
+		lesson_area like '%'||#{lesson_area,jdbcType=VARCHAR}||'%' and
+		subject like '%'||#{subject,jdbcType=VARCHAR}||'%' and
+		gender = #{gender,jdbcType=VARCHAR} and
+		place like '%'||#{place,jdbcType=VARCHAR}||'%' and
+		wish_price=#{wish_price,jdbcType=INTEGER}
+	</select>
+
+
+
+
+	<select id="teacherSimpleSearch" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+		select *from(
+			select rownum rnum, lesson_style, wish_price, tc_count, userid, tinf_title, career, lesson_area,
+			subject, originalfilepath, renamefilepath 
+			from(
+				select *
+				from teacher_inf
+				where lesson_area like '%'||#{lesson_area}||'%' and
+			  	subject like '%'||#{subject}||'%')order by tc_count desc)
+				where rnum >= #{startRow,jdbcType=INTEGER} and rnum <= #{endRow,jdbcType=INTEGER}
+		]]>
+	</select>
+
+	<select id="teacherDetailSearch" parameterType="hashmap"
+		resultType="hashmap">
+		<![CDATA[
+		select *
+		from(
+			select rownum rnum, lesson_style, wish_price, tc_count, userid, tinf_title, career, lesson_area,
+			subject, originalfilepath, renamefilepath 
+			from(
+				select *
+				from teacher_inf
+				left join member using(userid)
+				where lesson_area like '%'||#{lesson_area}||'%' and
+			  subject like '%'||#{subject}||'%' and
+			 gender = #{gender} and
+			  place like '%'||#{place}||'%' and
+			  wish_price = #{wish_price})order by tc_count desc)
+		where rnum >= #{startRow,jdbcType=INTEGER} and rnum <= #{endRow,jdbcType=INTEGER}
+		]]>
+	</select>
+<update id="teacherCount" parameterType="teacher">
+<![CDATA[
+update teacher_inf set tc_count=(tc_count + 1) WHERE userid = #{userid}
+]]>
+</update>
+<update id="teacherUpdate" parameterType="teacher">
+<![CDATA[
+update teacher_inf set 
+subject = #{subject, jdbcType=VARCHAR},
+tinf_title=	#{tinf_title, jdbcType=VARCHAR},
+self = #{self, jdbcType=VARCHAR},
+time_price=	#{time_price, jdbcType=INTEGER},
+wish_price=	#{wish_price, jdbcType=INTEGER},
+academic=#{academic, jdbcType=VARCHAR},
+university=#{university, jdbcType=VARCHAR},
+major=#{major, jdbcType=VARCHAR},
+university_state=#{university_state, jdbcType=VARCHAR},
+career=#{career, jdbcType=INTEGER},
+lesson_style=#{lesson_style, jdbcType=VARCHAR},
+lesson_area=#{lesson_area, jdbcType=VARCHAR},
+call_time=#{call_time, jdbcType=VARCHAR},
+lesson_target=#{lesson_target,jdbcType=VARCHAR},
+place_check=#{place_check, jdbcType=VARCHAR},
+place=#{place, jdbcType=VARCHAR},
+price_check=#{price_check, jdbcType=VARCHAR},
+free_check=#{free_check, jdbcType=VARCHAR}
+WHERE userid = #{userid}
+]]>
+</update>
+<select id="teacherOneIn" parameterType="teacher"
+		resultType="teacher">
+		<![CDATA[
+		select *
+		from  teacher_inf
+		left join member using(userid)
+		where userid = #{userid}
+		]]>
+	</select>
+
+<insert id="insertEpWrite" parameterType="teacherInfo">
+<![CDATA[
+insert into teacher_ep(ep_no, userid, teacher_id,
+mark, review, tinf_no, t_ep_day, ep_count) 
+values(SEQ_teacher_ep.nextval, #{userid, jdbcType=VARCHAR}, #{teacher_id, jdbcType=VARCHAR}, #{mark, jdbcType=INTEGER}, #{review, jdbcType=VARCHAR}, #{tinf_no, jdbcType=INTEGER}, default, default)
+	]]>
+</insert>
+<insert id="insertCurri" parameterType="curri">
+<![CDATA[
+insert into curriculum values(SEQ_curriculum.nextval, #{userid, jdbcType=VARCHAR}, #{tinf_no, jdbcType=INTEGER}, #{c_originalfilepath, jdbcType=VARCHAR},
+	#{c_renamefilepath, jdbcType=VARCHAR})
+]]>
+</insert>
+<update id="updateCurri" parameterType="curri">
+<![CDATA[
+update curriculum set c_originalfilepath=#{c_originalfilepath}, c_renamefilepath=#{c_renamefilepath} WHERE userid = #{userid}
+]]>
+</update>
+</mapper>
